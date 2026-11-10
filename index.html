@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cre8Learn Institute: Permutations and Combinatorial Analysis Portal</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #eef1ec;
+    --surface: #ffffff;
+    --surface-2: #f4f7f1;
+    --border: #d3dbcf;
+    --accent: #2f6fb5;
+    --accent-dim: #4f8cd0;
+    --gold: #b08d1e;
+    --green: #2d8a4a;
+    --red: #c0392b;
+    --text: #1a1a1a;
+    --text-dim: #555555;
+    --mono: "Courier New", Courier, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .brand .inst {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: var(--mono);
+    width: 100%;
+    margin-bottom: -4px;
+    font-weight: bold;
+  }
+  .brand .name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+  }
+  .brand .sub {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .tabs {
+    display: flex;
+    gap: 6px;
+    background: var(--surface-2);
+    border-radius: 8px;
+    padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .tab {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    padding: 9px 20px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    font-weight: 500;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 28px 24px 80px;
+  }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  .portal-intro {
+    background: linear-gradient(135deg, #f4f8f2 0%, #ffffff 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 30px;
+    margin-bottom: 26px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .portal-intro .inst-tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    display: block;
+    font-weight: bold;
+  }
+  .portal-intro h1 {
+    font-size: 24px;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .portal-intro p {
+    color: var(--text-dim);
+    font-size: 14px;
+    max-width: 720px;
+  }
+  .portal-intro .beginners {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #fffdf4;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    font-size: 13.5px;
+    color: var(--text-dim);
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  }
+  .section-header {
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .section-header .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 3px;
+    font-weight: bold;
+  }
+  .section-header h3 {
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .section-header .toggle {
+    color: var(--accent);
+    font-size: 20px;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .section-card.open .toggle { transform: rotate(45deg); }
+
+  .section-body {
+    display: none;
+    padding: 4px 24px 22px;
+    border-top: 1px solid var(--border);
+  }
+  .section-card.open .section-body { display: block; }
+
+  .topic {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .topic:last-child { border-bottom: none; }
+  .topic h4 {
+    font-size: 14.5px;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .topic p, .topic li {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .topic ul {
+    padding-left: 20px;
+    margin-top: 4px;
+  }
+  .topic strong { color: var(--text); }
+  .topic code {
+    font-family: var(--mono);
+    background: var(--surface-2);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12.5px;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .topic .box {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    background: var(--surface-2);
+    padding: 12px 16px;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    color: var(--text);
+    margin: 10px 0;
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+  .topic .note {
+    background: #eaf2fb;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .topic .warn {
+    background: #fdf0ee;
+    border-left: 3px solid var(--red);
+    border-radius: 0 4px 4px 0;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .topic .tip {
+    background: #eaf7ee;
+    border-left: 3px solid var(--green);
+    border-radius: 0 4px 4px 0;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .topic table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 13px;
+  }
+  .topic table th, .topic table td {
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .topic table th {
+    background: var(--surface-2);
+    font-weight: 600;
+    color: var(--text);
+  }
+  .topic table td { color: var(--text-dim); }
+
+  .quiz-intro {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 26px 30px;
+    margin-bottom: 22px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .quiz-intro .inst-tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: block;
+    font-weight: bold;
+  }
+  .quiz-intro h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .quiz-intro p {
+    color: var(--text-dim);
+    font-size: 13.5px;
+    margin-bottom: 16px;
+  }
+  .quiz-intro .start-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 13px 34px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.15s;
+  }
+  .quiz-intro .start-btn:hover {
+    background: #3a7fc5;
+    box-shadow: 0 0 20px rgba(47, 111, 181, 0.25);
+  }
+  .quiz-intro .start-btn:active { transform: scale(0.98); }
+
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  }
+  .q-card .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .q-card .qnum {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .q-card .topic-tag {
+    font-size: 10px;
+    background: var(--surface-2);
+    color: var(--text-dim);
+    padding: 2px 10px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    border: 1px solid var(--border);
+  }
+  .q-card .qtext {
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 16px;
+    font-weight: 500;
+    line-height: 1.55;
+  }
+  .q-options {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .q-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    background: var(--surface-2);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13.5px;
+    color: var(--text-dim);
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+  }
+  .q-option:hover {
+    background: #eaf2fb;
+    color: var(--text);
+    border-color: var(--accent-dim);
+  }
+  .q-option .letter {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .q-option.selected {
+    border-color: var(--accent);
+    background: rgba(47, 111, 181, 0.08);
+    color: var(--text);
+  }
+  .q-option.selected .letter {
+    background: var(--accent);
+    color: #fff;
+  }
+  .q-option.correct {
+    border-color: var(--green);
+    background: rgba(45, 138, 74, 0.1);
+    color: var(--text);
+  }
+  .q-option.correct .letter {
+    background: var(--green);
+    color: #fff;
+  }
+  .q-option.wrong {
+    border-color: var(--red);
+    background: rgba(192, 57, 43, 0.08);
+    color: var(--text);
+  }
+  .q-option.wrong .letter {
+    background: var(--red);
+    color: #fff;
+  }
+
+  .quiz-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 26px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: inherit;
+    font-size: 13.5px;
+    padding: 11px 26px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.15s, background 0.15s;
+    border: 1px solid transparent;
+  }
+  .btn:hover { opacity: 0.88; }
+  .btn.primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn.ghost {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text-dim);
+  }
+  .btn.ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .score-banner {
+    background: linear-gradient(135deg, #f4f8f2 0%, #ffffff 100%);
+    border: 1px solid var(--accent-dim);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin-top: 26px;
+    display: none;
+    box-shadow: 0 4px 16px rgba(47, 111, 181, 0.08);
+  }
+  .score-banner.show { display: block; }
+  .score-banner .big {
+    font-size: 40px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .score-banner .msg {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .bar-outer {
+    flex: 1;
+    min-width: 160px;
+    height: 6px;
+    background: var(--surface-2);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .bar-inner {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, var(--accent-dim), var(--accent));
+    transition: width 0.3s;
+  }
+
+  .site-footer {
+    text-align: center;
+    padding: 26px 20px 40px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .site-footer strong { color: var(--gold); }
+
+  .source-list {
+    font-size: 13px;
+    color: var(--text-dim);
+    padding-left: 18px;
+  }
+  .source-list li {
+    margin-bottom: 8px;
+  }
+  .source-list a {
+    color: var(--accent);
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .source-list a:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    .topbar { padding: 12px 16px; }
+    .container { padding: 20px 16px 60px; }
+    .portal-intro, .quiz-intro { padding: 22px 20px; }
+    .q-card { padding: 18px 18px; }
+    .tab { padding: 8px 14px; font-size: 12px; }
+    .topic table { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="inst">Cre8Learn Institute</span>
+    <span class="name">Permutations and Combinatorial Analysis</span>
+    <span class="sub">Engineering and Technology Portal</span>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-view="study" type="button">Study Portal</button>
+    <button class="tab" data-view="quiz" type="button">Quiz Bank</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="view active" id="view-study">
+    <div class="portal-intro">
+      <span class="inst-tag">Cre8Learn Institute</span>
+      <h1>Permutations and Combinatorial Analysis</h1>
+      <p>Written for Engineering and Technology students. Every formula is stated exactly, every worked example is short, and every method is tied to an engineering use case. Read one section at a time and attempt the quiz only after you finish the notes.</p>
+      <div class="beginners">
+        <strong>How to use this portal:</strong> Open Section 1 first. The whole topic rests on the Fundamental Counting Principle. If you understand that one idea, permutations and combinations become simple applications of it.
+      </div>
+    </div>
+
+    <div class="section-card open">
+      <div class="section-header">
+        <div>
+          <span class="label">Section 1</span>
+          <h3>The Fundamental Counting Principle</h3>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="section-body">
+        <div class="topic">
+          <h4>Statement of the Principle</h4>
+          <p>If one operation can be performed in <code>m</code> ways and a second operation can be performed in <code>n</code> ways, then the two operations performed together can be performed in <code>m × n</code> ways. This is the multiplication rule for counting.</p>
+          <div class="box">Engineering example:
+A printed circuit board has 8 different locations for a component.
+Four different component types can be placed in one location.
+Total design choices = 8 × 4 = 32</div>
+          <p>For <code>r</code> operations performed in sequence, with <code>n1</code>, <code>n2</code>, ..., <code>nr</code> outcomes respectively, the total number of outcomes is the product <code>n1 × n2 × ... × nr</code>.</p>
+          <div class="box">License plate with 3 letters followed by 3 digits, repeats allowed:
+26 × 26 × 26 × 10 × 10 × 10 = 17,576,000
+Without repetition:
+26 × 25 × 24 × 10 × 9 × 8 = 11,232,000</div>
+          <div class="note"><strong>Why it works:</strong> Every outcome of the first operation combines with every outcome of the second, so the total list of combined outcomes is a rectangle of size m by n.</div>
+        </div>
+        <div class="topic">
+          <h4>When to Use It</h4>
+          <ul>
+            <li>When operations happen one after another (sequential stages).</li>
+            <li>When each stage has a fixed number of independent choices.</li>
+            <li>When you are counting total arrangements, not selecting a subset.</li>
+          </ul>
+          <div class="tip"><strong>Tip for engineers:</strong> Draw a tree diagram with one branch per stage. The number of leaves at the end of the tree is the answer.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="label">Section 2</span>
+          <h3>Factorial Notation</h3>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="section-body">
+        <div class="topic">
+          <h4>Definition</h4>
+          <p>For a natural number <code>n</code>, the factorial <code>n!</code> is the product of all positive integers from 1 up to <code>n</code>.</p>
+          <div class="box">n! = n × (n − 1) × (n − 2) × ... × 3 × 2 × 1
+
+5! = 5 × 4 × 3 × 2 × 1 = 120
+3! = 3 × 2 × 1 = 6
+1! = 1</div>
+          <p>By convention, <code>0! = 1</code>. This convention is required so that the permutation and combination formulas give correct answers in edge cases, for example when you choose all <code>n</code> objects from <code>n</code> objects.</p>
+          <div class="warn"><strong>Watch out:</strong> 0! is not 0. It is defined as 1 so that formulas remain consistent.</div>
+        </div>
+        <div class="topic">
+          <h4>Useful Factorial Facts</h4>
+          <ul>
+            <li><code>n! = n × (n − 1)!</code></li>
+            <li><code>(n + 1)! = (n + 1) × n!</code></li>
+            <li>Factorials grow extremely fast. 10! is already 3,628,800.</li>
+          </ul>
+          <div class="note"><strong>Engineering note:</strong> In reliability and quality control, factorials appear when you count the number of orderings of failures or the number of test sequences.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="label">Section 3</span>
+          <h3>Permutations: Order Matters</h3>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="section-body">
+        <div class="topic">
+          <h4>Definition</h4>
+          <p>A <strong>permutation</strong> is an ordered arrangement of objects. Order matters. The arrangement ABC is different from CBA.</p>
+          <p>The number of permutations of <code>n</code> distinct objects taken <code>r</code> at a time is written <code>nPr</code>.</p>
+          <div class="box">nPr = n! / (n − r)!
+
+Example: Top 3 finishers in a race with 5 cars
+5P3 = 5! / (5 − 3)! = 120 / 2 = 60
+ABC is not the same as CAB.</div>
+          <p>When <code>r = n</code>, the number of permutations of all <code>n</code> objects is simply <code>n!</code>.</p>
+        </div>
+        <div class="topic">
+          <h4>Permutations with Repetition Allowed</h4>
+          <p>If you are forming an ordered sequence of length <code>k</code> from a set of <code>n</code> objects and repetition is allowed, each position has <code>n</code> choices independently.</p>
+          <div class="box">Number of k-permutations with repetition = n^k
+
+Example: 3 letter words from a 26 letter alphabet, repetition allowed
+26 × 26 × 26 = 26^3 = 17,576
+
+Example: Binary strings of length k
+2^k</div>
+        </div>
+        <div class="topic">
+          <h4>Circular Permutations</h4>
+          <p>When objects are arranged in a circle, rotations of the same arrangement are considered identical. For example, seating A, B, C in a circle gives only 2 distinct arrangements, not 3! = 6, because rotating the circle does not create a new arrangement.</p>
+          <div class="box">Number of circular permutations of n distinct objects = (n − 1)!
+
+Example: 5 people seated around a round table
+(5 − 1)! = 4! = 24</div>
+          <div class="tip"><strong>Why:</strong> Fix one person as the reference point. The remaining <code>n − 1</code> people can be arranged in <code>(n − 1)!</code> ways relative to that reference.</div>
+        </div>
+        <div class="topic">
+          <h4>Permutations with Identical Items</h4>
+          <p>When some objects are identical, dividing by the factorials of the repeated items removes the overcounting.</p>
+          <div class="box">Number of distinct permutations of n objects with groups of identical items =
+n! / (n1! × n2! × ... × nr!)
+
+Example: Distinct arrangements of the letters of MISSISSIPPI
+Total letters = 11
+M appears 1 time, I appears 4 times, S appears 4 times, P appears 2 times
+11! / (1! × 4! × 4! × 2!) = 34,650</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="label">Section 4</span>
+          <h3>Combinations: Order Does Not Matter</h3>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="section-body">
+        <div class="topic">
+          <h4>Definition</h4>
+          <p>A <strong>combination</strong> is a selection of objects where order does not matter. Selecting A, B, C is the same as selecting C, B, A.</p>
+          <p>The number of combinations of <code>n</code> distinct objects taken <code>r</code> at a time is written <code>nCr</code> or <code>C(n, r)</code>.</p>
+          <div class="box">nCr = nPr / r! = n! / (r! × (n − r)!)
+
+Example: Choose a subcommittee of 4 from 10 engineers
+10C4 = 10! / (4! × 6!) = 210</div>
+          <p>The relationship between permutations and combinations is exact: every combination of <code>r</code> objects can be arranged internally in <code>r!</code> ways. Therefore <code>nPr = nCr × r!</code>.</p>
+          <div class="note"><strong>Engineering example:</strong> A reliability test selects 3 components from a batch of 20. The order of selection does not affect which batch is tested, so this is a combination, not a permutation. 20C3 = 1140.</div>
+        </div>
+        <div class="topic">
+          <h4>Key Properties of Combinations</h4>
+          <ul>
+            <li><strong>Symmetry:</strong> <code>nCr = nC(n − r)</code>. Choosing 3 from 10 is the same count as choosing 7 from 10.</li>
+            <li><strong>Endpoints:</strong> <code>nC0 = 1</code> and <code>nCn = 1</code>.</li>
+            <li><strong>Pascal's identity:</strong> <code>nCr + nC(r − 1) = (n + 1)Cr</code>. This generates Pascal's triangle.</li>
+            <li><strong>Total subsets:</strong> The sum of all combinations <code>nC0 + nC1 + ... + nCn = 2^n</code>.</li>
+          </ul>
+          <div class="box">Check symmetry:
+10C3 = 120
+10C7 = 120
+Both are equal, as expected.</div>
+        </div>
+        <div class="topic">
+          <h4>Combinations with Repetition Allowed</h4>
+          <p>If you choose <code>r</code> items from <code>n</code> types and repetition is allowed, and order does not matter, the count is:</p>
+          <div class="box">(n + r − 1)Cr = (n + r − 1)! / (r! × (n − 1)!)
+
+Example: Choose 3 cables from 5 cable types, repetition allowed
+(5 + 3 − 1)C3 = 7C3 = 35</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="label">Section 5</span>
+          <h3>Binomial Coefficients and the Binomial Theorem</h3>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="section-body">
+        <div class="topic">
+          <h4>Binomial Coefficients</h4>
+          <p>The combination <code>nCr</code> is also called the <strong>binomial coefficient</strong>, written <code>(n over r)</code> in some texts. It counts the number of ways to choose <code>r</code> successes in <code>n</code> trials.</p>
+          <div class="box">(n over r) = nCr = n! / (r! × (n − r)!)</div>
+        </div>
+        <div class="topic">
+          <h4>The Binomial Theorem</h4>
+          <div class="box">(a + b)^n = Σ from r = 0 to n of [ nCr × a^(n − r) × b^r ]
+
+Example:
+(a + b)^4 = a^4 + 4a^3 b + 6a^2 b^2 + 4ab^3 + b^4
+Coefficients: 1, 4, 6, 4, 1</div>
+          <p>The coefficients of the expansion are exactly the combinations <code>nC0, nC1, ..., nCn</code>, and they form the rows of Pascal's triangle.</p>
+          <div class="note"><strong>Engineering application:</strong> In structural mechanics, the binomial expansion is used to compute coefficients in beam deflection and plate bending problems. In reliability engineering, it counts the number of ways exactly <code>k</code> components out of <code>n</code> can fail.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="label">Section 6</span>
+          <h3>Engineering Applications</h3>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="section-body">
+        <div class="topic">
+          <h4>Circuit Board Layout</h4>
+          <p>A printed circuit board has 8 different locations where a component can be placed. If four distinct component types are available, the number of ways to assign a component to a location, with no location repeated, is a permutation.</p>
+          <div class="box">8P4 = 8! / 4! = 1680</div>
+        </div>
+        <div class="topic">
+          <h4>Quality Control and Reliability</h4>
+          <p>A batch of 50 components contains 5 defective units. A quality engineer draws a sample of 10. The number of possible samples is a combination because the order of drawing does not matter.</p>
+          <div class="box">50C10 = 10,272,278,170</div>
+          <p>If the engineer wants to know how many samples contain exactly 2 defective units, the count is the product of two combinations:</p>
+          <div class="box">5C2 × 45C8</div>
+        </div>
+        <div class="topic">
+          <h4>Network and Communication Systems</h4>
+          <p>In a network with 12 nodes, the number of possible point to point links is the number of pairs of nodes.</p>
+          <div class="box">12C2 = 66 links</div>
+          <p>If the links are directional (one way connections), the count becomes a permutation: <code>12P2 = 132</code>.</p>
+        </div>
+        <div class="topic">
+          <h4>Manufacturing and Production Sequences</h4>
+          <p>A machine must process 6 different jobs. The number of possible processing orders is <code>6! = 720</code>. If two jobs are identical and the rest are distinct, divide by <code>2!</code> to remove overcounting.</p>
+          <div class="box">6! / 2! = 360 distinct schedules</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="label">Section 7</span>
+          <h3>Common Mistakes to Avoid</h3>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="section-body">
+        <div class="topic">
+          <h4>Using a Permutation When the Order Does Not Matter</h4>
+          <p>If you are choosing a committee, a sample, or a set of components where the final group is what matters, use a combination. If you are ranking, scheduling, or assigning to labelled positions, use a permutation.</p>
+        </div>
+        <div class="topic">
+          <h4>Forgetting to Divide by Repeated Factorials</h4>
+          <p>When identical items are present, always divide by the factorial of each repeated group. Otherwise you will overcount.</p>
+        </div>
+        <div class="topic">
+          <h4>Forgetting the Circular Adjustment</h4>
+          <p>For seating around a round table, use <code>(n − 1)!</code>, not <code>n!</code>. Rotations are the same arrangement.</p>
+        </div>
+        <div class="topic">
+          <h4>Treating 0! as 0</h4>
+          <p><code>0! = 1</code>. This is essential for the combination formula when <code>r = 0</code> or <code>r = n</code>.</p>
+        </div>
+        <div class="topic">
+          <h4>Adding Instead of Multiplying in Multi Stage Problems</h4>
+          <p>When stages are sequential, multiply the choices. Add only when you are counting mutually exclusive alternatives.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="label">Section 8</span>
+          <h3>Sources and Further Reading</h3>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="section-body">
+        <div class="topic">
+          <h4>Reputable References Used for This Portal</h4>
+          <ul class="source-list">
+            <li>LibreTexts Mathematics, <em>Permutations and Combinations</em>, Calculus for Engineering Technology. <a href="https://math.libretexts.org" target="_blank" rel="noopener">math.libretexts.org</a></li>
+            <li>MIT OpenCourseWare, <em>Lecture 4: Counting</em>, Probabilistic Systems Analysis and Applied Probability, Electrical Engineering and Computer Science. <a href="https://ocw.mit.edu" target="_blank" rel="noopener">ocw.mit.edu</a></li>
+            <li>University of Illinois at Urbana Champaign, ECE 307, <em>Review of Combinatorial Analysis</em>, Department of Electrical and Computer Engineering.</li>
+            <li>eCampusOntario, <em>Permutations, Circular Permutations and Permutations with Similar Elements</em>, Mathematics for Public and Occupational Health Professionals.</li>
+            <li>Springer Texts in Statistics, Carlton and Devore, <em>Probability with Applications in Engineering, Science and Technology</em>, Second Edition, counting and permutation chapters.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-quiz">
+    <div class="quiz-intro" id="quizStart">
+      <span class="inst-tag">Cre8Learn Institute</span>
+      <h2>Permutations and Combinatorial Analysis: Quiz Bank</h2>
+      <p>41 questions covering the counting principle, factorials, permutations, circular permutations, combinations, binomial coefficients, and engineering applications. Answer at your own pace, then check your score.</p>
+      <button class="start-btn" id="startQuizBtn" type="button">Start Quiz</button>
+    </div>
+
+    <div id="quizArea" style="display:none;">
+      <div class="progress-row">
+        <span id="progressText">0 of 41 answered</span>
+        <div class="bar-outer"><div class="bar-inner" id="progressBar"></div></div>
+      </div>
+      <div id="questions"></div>
+      <div class="quiz-controls">
+        <button class="btn primary" id="checkBtn" type="button">Check Answers</button>
+        <button class="btn ghost" id="resetBtn" type="button">Reset</button>
+      </div>
+      <div class="score-banner" id="scoreBanner">
+        <div class="big" id="scoreBig">0 / 41</div>
+        <div class="msg" id="scoreMsg"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="site-footer">
+  <strong>Cre8Learn Institute</strong> &middot; Permutations and Combinatorial Analysis &middot; Engineering and Technology &middot; 2026
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var tabs = document.querySelectorAll(".tab");
+  var views = document.querySelectorAll(".view");
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      tabs.forEach(function (t) { t.classList.remove("active"); });
+      views.forEach(function (v) { v.classList.remove("active"); });
+      tab.classList.add("active");
+      document.getElementById("view-" + tab.getAttribute("data-view")).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+
+  var headers = document.querySelectorAll(".section-header");
+  headers.forEach(function (h) {
+    h.addEventListener("click", function () {
+      var card = h.parentElement;
+      card.classList.toggle("open");
+    });
+  });
+
+  var questions = [
+    { topic: "Counting Principle", text: "A PCB has 8 locations for a component, and 4 component types are available. If one location is chosen and one component type is placed there, how many design choices exist?", options: ["12", "32", "24", "64"], answer: 1 },
+    { topic: "Counting Principle", text: "A license plate has 3 letters followed by 3 digits. Repeats are allowed. How many plates are possible?", options: ["11,232,000", "17,576,000", "1,000,000", "26,000,000"], answer: 1 },
+    { topic: "Counting Principle", text: "A license plate has 3 letters followed by 3 digits. No repeats are allowed. How many plates are possible?", options: ["17,576,000", "11,232,000", "9,000,000", "15,600,000"], answer: 1 },
+    { topic: "Counting Principle", text: "A restaurant offers 5 starters, 6 mains and 4 desserts. How many three course meals are possible?", options: ["15", "120", "74", "60"], answer: 1 },
+    { topic: "Counting Principle", text: "How many outcomes are there when a fair coin is tossed 5 times in a row?", options: ["10", "25", "32", "64"], answer: 2 },
+
+    { topic: "Factorials", text: "What is the value of 5! ?", options: ["25", "60", "120", "720"], answer: 2 },
+    { topic: "Factorials", text: "What is the value of 0! ?", options: ["0", "1", "Undefined", "Infinity"], answer: 1 },
+    { topic: "Factorials", text: "Which expression is equal to 6! ?", options: ["6 × 5!", "5 × 4!", "6 × 6!", "3! × 3!"], answer: 0 },
+    { topic: "Factorials", text: "What is 4! + 3! ?", options: ["30", "24", "18", "42"], answer: 0 },
+    { topic: "Factorials", text: "What is 7! / 5! ?", options: ["2", "12", "42", "21"], answer: 2 },
+
+    { topic: "Permutations", text: "What is the formula for the number of permutations of n distinct objects taken r at a time?", options: ["n! / r!", "n! / (n − r)!", "n! / (r! × (n − r)!)", "n × r"], answer: 1 },
+    { topic: "Permutations", text: "What is the value of 5P3 ?", options: ["10", "20", "60", "120"], answer: 2 },
+    { topic: "Permutations", text: "In a race with 8 runners, how many ways can the gold, silver and bronze medals be awarded?", options: ["56", "336", "512", "24"], answer: 1 },
+    { topic: "Permutations", text: "How many 4 letter ordered codes can be formed from the letters A, B, C, D, E, F if no letter is repeated?", options: ["24", "120", "360", "720"], answer: 2 },
+    { topic: "Permutations", text: "How many ways can 5 distinct engineering books be arranged on a shelf?", options: ["25", "60", "120", "720"], answer: 2 },
+
+    { topic: "Repetition", text: "How many 3 letter words can be formed from the 26 letter alphabet if repetition is allowed?", options: ["26 × 3", "26^3", "26P3", "26C3"], answer: 1 },
+    { topic: "Repetition", text: "How many binary strings of length 8 exist?", options: ["16", "64", "128", "256"], answer: 3 },
+    { topic: "Repetition", text: "A 4 digit PIN allows digits 0 to 9 with repetition. How many PINs are possible?", options: ["5,040", "10,000", "1,000", "40,000"], answer: 1 },
+    { topic: "Repetition", text: "How many distinct arrangements exist for the letters of the word ENGINEER?", options: ["40,320", "3,360", "2,520", "10,080"], answer: 1 },
+    { topic: "Repetition", text: "How many distinct arrangements exist for the letters of the word MISSISSIPPI?", options: ["11!", "34,650", "39,916,800", "27,720"], answer: 1 },
+
+    { topic: "Circular Permutations", text: "How many ways can 5 people be seated around a round table?", options: ["120", "24", "5", "20"], answer: 1 },
+    { topic: "Circular Permutations", text: "What is the formula for circular permutations of n distinct objects?", options: ["n!", "(n − 1)!", "n! / 2", "nP2"], answer: 1 },
+    { topic: "Circular Permutations", text: "How many ways can 6 distinct keys be arranged around a circular holder that cannot be flipped over?", options: ["720", "120", "360", "6"], answer: 1 },
+    { topic: "Circular Permutations", text: "Why do we use (n − 1)! instead of n! for a round table?", options: ["Because one chair is missing", "Because rotations of the same seating are identical", "Because the table can be flipped over", "Because order does not matter"], answer: 1 },
+
+    { topic: "Combinations", text: "What is the formula for nCr ?", options: ["n! / (n − r)!", "n! / (r! × (n − r)!)", "n! / r!", "n × r"], answer: 1 },
+    { topic: "Combinations", text: "What is the value of 10C4 ?", options: ["120", "210", "5040", "720"], answer: 1 },
+    { topic: "Combinations", text: "A quality engineer selects 3 components from a batch of 20. Order does not matter. How many samples are possible?", options: ["1,140", "6,840", "20,000", "60"], answer: 0 },
+    { topic: "Combinations", text: "What is the value of 8C2 ?", options: ["16", "28", "56", "64"], answer: 1 },
+    { topic: "Combinations", text: "Which combination is equal to 10C7 ?", options: ["10C3", "10C2", "7C10", "10C10"], answer: 0 },
+    { topic: "Combinations", text: "What is the value of nC0 ?", options: ["0", "1", "n", "Undefined"], answer: 1 },
+    { topic: "Combinations", text: "What is the value of nCn ?", options: ["0", "1", "n", "n!"], answer: 1 },
+    { topic: "Combinations", text: "How many ways can a subcommittee of 4 be chosen from 12 engineers?", options: ["495", "11,880", "48", "1,320"], answer: 0 },
+    { topic: "Combinations", text: "In a network of 12 nodes, how many distinct point to point links are possible?", options: ["24", "66", "132", "144"], answer: 1 },
+    { topic: "Combinations", text: "If the 12 node network uses directional links, how many ordered links are possible?", options: ["66", "132", "144", "24"], answer: 1 },
+
+    { topic: "Binomial", text: "What are the coefficients in the expansion of (a + b)^4 ?", options: ["1, 3, 3, 1", "1, 4, 6, 4, 1", "1, 5, 10, 10, 5, 1", "2, 4, 6, 4, 2"], answer: 1 },
+    { topic: "Binomial", text: "In the binomial expansion of (a + b)^n, the coefficient of the term a^(n − r) b^r is:", options: ["nPr", "nCr", "n!", "r!"], answer: 1 },
+    { topic: "Binomial", text: "What is the sum of all binomial coefficients in the expansion of (1 + 1)^n ?", options: ["n", "n!", "2^n", "n^2"], answer: 2 },
+    { topic: "Binomial", text: "Which identity is known as Pascal's identity?", options: ["nCr = nC(n − r)", "nCr + nC(r − 1) = (n + 1)Cr", "nC0 = 1", "nPn = n!"], answer: 1 },
+
+    { topic: "Engineering", text: "A machine processes 6 distinct jobs. How many processing orders exist?", options: ["36", "120", "720", "6"], answer: 2 },
+    { topic: "Engineering", text: "A batch has 50 components with 5 defective. How many samples of 10 can be drawn ignoring order?", options: ["50C10", "50P10", "10C5", "5C10"], answer: 0 },
+    { topic: "Engineering", text: "In reliability, the number of ways exactly k components out of n can fail is counted using:", options: ["nPk", "nCk", "n!", "k^n"], answer: 1 }
+  ];
+
+  var quizStart = document.getElementById("quizStart");
+  var quizArea = document.getElementById("quizArea");
+  var startBtn = document.getElementById("startQuizBtn");
+  var questionsEl = document.getElementById("questions");
+  var checkBtn = document.getElementById("checkBtn");
+  var resetBtn = document.getElementById("resetBtn");
+  var scoreBanner = document.getElementById("scoreBanner");
+  var scoreBig = document.getElementById("scoreBig");
+  var scoreMsg = document.getElementById("scoreMsg");
+  var progressText = document.getElementById("progressText");
+  var progressBar = document.getElementById("progressBar");
+
+  var selections = {};
+  var checked = false;
+
+  function buildQuiz() {
+    questionsEl.innerHTML = "";
+    selections = {};
+    checked = false;
+    scoreBanner.classList.remove("show");
+    updateProgress();
+
+    questions.forEach(function (q, qi) {
+      var card = document.createElement("div");
+      card.className = "q-card";
+
+      var meta = document.createElement("div");
+      meta.className = "meta";
+      meta.innerHTML =
+        '<span class="qnum">Question ' + (qi + 1) + "</span>" +
+        '<span class="topic-tag">' + q.topic + "</span>";
+      card.appendChild(meta);
+
+      var qtext = document.createElement("div");
+      qtext.className = "qtext";
+      qtext.textContent = q.text;
+      card.appendChild(qtext);
+
+      var opts = document.createElement("div");
+      opts.className = "q-options";
+
+      q.options.forEach(function (opt, oi) {
+        var optEl = document.createElement("div");
+        optEl.className = "q-option";
+        optEl.setAttribute("data-q", qi);
+        optEl.setAttribute("data-o", oi);
+
+        var letter = document.createElement("span");
+        letter.className = "letter";
+        letter.textContent = String.fromCharCode(65 + oi);
+
+        var textSpan = document.createElement("span");
+        textSpan.textContent = opt;
+
+        optEl.appendChild(letter);
+        optEl.appendChild(textSpan);
+
+        optEl.addEventListener("click", function () {
+          if (checked) return;
+          var prev = opts.querySelector(".selected");
+          if (prev) prev.classList.remove("selected");
+          optEl.classList.add("selected");
+          selections[qi] = oi;
+          updateProgress();
+        });
+
+        opts.appendChild(optEl);
+      });
+
+      card.appendChild(opts);
+      questionsEl.appendChild(card);
+    });
+  }
+
+  function updateProgress() {
+    var answered = Object.keys(selections).length;
+    var total = questions.length;
+    progressText.textContent = answered + " of " + total + " answered";
+    var pct = total === 0 ? 0 : (answered / total) * 100;
+    progressBar.style.width = pct + "%";
+  }
+
+  function checkAnswers() {
+    checked = true;
+    var correct = 0;
+    var cards = questionsEl.querySelectorAll(".q-card");
+
+    questions.forEach(function (q, qi) {
+      var card = cards[qi];
+      var optEls = card.querySelectorAll(".q-option");
+      var chosen = selections[qi];
+
+      optEls.forEach(function (optEl, oi) {
+        optEl.classList.remove("correct", "wrong", "selected");
+        if (oi === q.answer) {
+          optEl.classList.add("correct");
+        } else if (oi === chosen && chosen !== q.answer) {
+          optEl.classList.add("wrong");
+        }
+      });
+
+      if (chosen === q.answer) {
+        correct++;
+      }
+    });
+
+    scoreBig.textContent = correct + " / " + questions.length;
+    var pct = Math.round((correct / questions.length) * 100);
+    var msg = "";
+    if (pct >= 80) msg = "Excellent work. You have a strong command of combinatorial counting.";
+    else if (pct >= 60) msg = "Good effort. Review the sections you missed and try again.";
+    else if (pct >= 40) msg = "Fair. Go back to Sections 1 to 4 in the study portal and rework the examples.";
+    else msg = "Do not worry. Read Section 1 slowly, then attempt the first ten questions again.";
+    scoreMsg.textContent = pct + "% correct. " + msg;
+    scoreBanner.classList.add("show");
+    scoreBanner.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function resetQuiz() {
+    buildQuiz();
+    scoreBanner.classList.remove("show");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  startBtn.addEventListener("click", function () {
+    quizStart.style.display = "none";
+    quizArea.style.display = "block";
+    buildQuiz();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  checkBtn.addEventListener("click", checkAnswers);
+  resetBtn.addEventListener("click", resetQuiz);
+
+})();
+</script>
+</body>
+</html>
